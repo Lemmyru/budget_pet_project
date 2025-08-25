@@ -1,1 +1,3 @@
-# budget_pet_project
+
+#Financial dashboard 
+d2cec9c (chore: initialize repo with README, .gitignore)
