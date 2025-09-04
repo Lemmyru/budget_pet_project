@@ -1,0 +1,21 @@
+services:
+  frontend-dev:
+    build:
+      context: .  # Корень проекта (где находятся docker/ и frontend/)
+      dockerfile: docker/DockerFile.dev  # Путь к Dockerfile.dev относительно корня
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+
+  frontend-prod:
+    build:
+      context: .
+      dockerfile: docker/DockerFile  # Путь к Dockerfile относительно корня
+    ports:
+      - "8080:80"
+    environment:
+      - NODE_ENV=production
