@@ -16,7 +16,7 @@ export function buildPlugins({mode, paths}: BuildOptions): Configuration['plugin
         plugins.push(new webpack.ProgressPlugin())
     }
     if (isProd) {
-        plugins.push(new MiniCssExtractPlugin({ filename: 'css/[name].[contenthash].css' }))
+        plugins.push(new MiniCssExtractPlugin({ filename: 'css/[name].css' }))
     }
 
     return plugins;

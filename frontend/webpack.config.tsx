@@ -3,9 +3,8 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import webpack from 'webpack';
 import {type Configuration as DevServerConfiguration} from "webpack-dev-server";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import {buildWebpack} from "./config/build/buildWebpack";
-import {BuildMode, BuildPath} from "./config/build/types/types";
-
+import {buildWebpack} from "./config/buildWebpack";
+import {BuildMode, BuildPath} from "./config/types/types";
 type Mode = 'development' | 'production';
 
 interface EnvVariables {
@@ -13,12 +12,12 @@ interface EnvVariables {
     port: number;
 }
 
-
 export default (env: EnvVariables) => {
     const paths: BuildPath = {
         output: path.resolve(__dirname, 'build'),
         entry: path.resolve(__dirname, 'src', 'index.tsx'),
         html: path.resolve(__dirname, 'public', 'index.html'),
+
     }
     const config: webpack.Configuration = buildWebpack({
         port: env.port ?? 3000,

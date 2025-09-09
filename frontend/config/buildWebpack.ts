@@ -26,14 +26,14 @@ export function buildWebpack(options: BuildOptions): webpack.Configuration {
         },
         resolve: buildResolvers(options),
         output: {
-            filename: '[name].[contenthash].js',
+            filename: '[name].js',
             clean: true,
             path: paths.output,
         },
-            optimization: {
-                runtimeChunk: 'single',
-            },
-            plugins: buildPlugins(options),
-        }
+        optimization: {
+            runtimeChunk: 'single',
+        },
+        plugins: buildPlugins(options),
+    }
 
 }
