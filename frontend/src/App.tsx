@@ -2,19 +2,18 @@ import React, {useState} from "react";
 import react from "react";
 import MainPage from "./pages/MainPage";
 import AppRouter from "./components/AppRouter";
-import Navbar from "./components/Navbar";
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import NavbarMain from "./components/NavbarMain";
+import Card from "./components/Card";
+
+
 
 
 const App: React.FC = () => {
     return (
-        <BrowserRouter>
-            <Routes>
-                WORKING
+        <div>
+            <AppRouter />;
 
-            </Routes>
-        </BrowserRouter>
-
+        </div>
     );
 };
 

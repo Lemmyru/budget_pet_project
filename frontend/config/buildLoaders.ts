@@ -1,4 +1,3 @@
-import {type Configuration as buildloaders} from "webpack-dev-server";
 import {ModuleOptions} from 'webpack'
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import {BuildOptions} from "./types/types";
@@ -14,14 +13,45 @@ export function buildLoaders(options: BuildOptions): ModuleOptions['rules'] {
             "sass-loader",
         ],
     }
-     const tsLoader = {
+    const tsLoader = {
         test: /\.tsx?$/,
         use: 'ts-loader',
         exclude: /node_modules/,
     }
 
-return [
-    scssLoader,
-    tsLoader
-]
+    const svgLoader = {
+        test: /\.svg$/i,
+        issuer: /\.[jt]sx?$/,
+        use: [{loader: '@svgr/webpack'}],
+    };
+
+
+    const imagesLoader = {
+
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
+            {
+                loader: 'file-loader',
+            },
+        ],
+    };
+
+
+    const fontsLoader = {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: 'asset/resource',
+        generator: {
+            filename: 'fonts/[name].[hash][ext]'
+        }
+    };
+
+
+    return [
+        scssLoader,
+        tsLoader,
+        svgLoader,
+        fontsLoader,
+        imagesLoader
+
+    ]
 }

@@ -1,0 +1,42 @@
+@use '../utils/_helpers' as *;
+@use '../utils/_fonts' as *;
+@use '../utils/_variables' as *;
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 40px;
+
+  &__logo {
+
+    height: 45px;
+    width: 45px;
+
+    svg {
+      height: 45px;
+      width: 45px;
+      g {
+        height: 45px;
+        width: 45px;
+      }
+    }
+  }
+
+  &__menu {
+    display: flex;
+    gap: 20px;
+
+    a {
+      text-decoration: none;
+      color: $color-dark;
+      font-weight: 600;
+      font-size: 1.5rem;
+      font-family: Quicksand, serif;
+
+      &:hover {
+        color: #9f43a1;
+      }
+    }
+  }
+}

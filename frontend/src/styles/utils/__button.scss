@@ -1,0 +1,24 @@
+@use '../utils/_helpers' as *;
+@use '../utils/_fonts' as *;
+@use '../utils/_variables' as *;
+
+.button {
+  padding: 10px 20px;
+  margin: 20px ;
+  border: none;
+  font-size: 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  max-width: 500px;
+  color: white;
+  background-color: $color-dark-purple;
+  display: inline-block;
+  width: auto;
+  text-align: center;
+  font-family:$font-family-base;
+  font-weight: bold;
+
+  &:hover {
+    background-color: $color-dark-purple-hover;
+  }
+}

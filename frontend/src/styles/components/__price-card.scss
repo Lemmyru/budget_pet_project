@@ -1,0 +1,39 @@
+
+@use '../utils/__variables' as *;
+
+.price-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 3px solid $color-dark-purple;
+  border-radius: 12px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 280px;
+  min-height: 180px;
+  gap: 1rem;
+  box-shadow: 0 4px 15px rgba($color-dark-purple, 0.1);
+
+
+  &__title {
+    font-family: Roboto, serif;
+    color: $color-dark-purple;
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  &__description {
+    font-size: 1.1rem;
+    font-family: Quicksand, serif;
+    color: $color-black;
+    margin: 0;
+    line-height: 1.5;
+  }
+}
+
+
+/*
+*/

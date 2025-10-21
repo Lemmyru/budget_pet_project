@@ -1,0 +1,44 @@
+@use '../utils/__variables' as *;
+@use '../utils/__variables' as *;
+
+.advantage-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 3px solid $color-dark-purple;
+  border-radius: 6px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 300px;
+  min-height: 200px;
+  gap: 1rem;
+
+  &__image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      height: 45px;
+      width: 45px;
+    }
+  }
+
+  &__title {
+    font-family: Roboto, serif;
+    color: black;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  &__description {
+    font-size: 1rem;
+    font-family: Quicksand, serif;
+    color: black;
+    margin: 0;
+    line-height: 1.4;
+  }
+}

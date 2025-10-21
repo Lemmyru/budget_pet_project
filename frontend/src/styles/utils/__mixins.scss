@@ -1,0 +1,18 @@
+@use 'sass:color';
+@use './_variables' as *;
+
+
+@mixin hover-darken($color, $percentage: 10%) {
+  &:hover {
+    background-color: color.adjust($color, $lightness: -$percentage);
+  }
+}
+
+@mixin button-style($bg-color: $color-dark-purple) {
+  border-radius: $border-radius;
+  border: $border;
+  background-color: $bg-color;
+  transition: background-color $transition-duration ease;
+
+  @include hover-darken($bg-color);
+}
