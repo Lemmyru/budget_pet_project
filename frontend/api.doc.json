@@ -1,0 +1,219 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Personal Finance Dashboard API",
+    "version": "1.0.0",
+    "description": "API, используемое фронтендом для аутентификации пользователей, получения информации о пользователе, транзакциях и статистике."
+  },
+  "servers": [
+    {
+      "url": "https://jsonplaceholder.typicode.com",
+      "description": "Mock server (заменить на реальный при подключении backend)"
+    },
+    {
+      "url": "http://localhost:8000",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/api/login": {
+      "post": {
+        "summary": "Вход пользователя",
+        "description": "Аутентификация по email и паролю",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": { "type": "string", "example": "user@example.com" },
+                  "password": { "type": "string", "example": "secret123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешный вход",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": { "type": "string", "example": "eyJhbGciOi..." },
+                    "refreshToken": { "type": "string", "example": "eyJhbGciOi..." },
+                    "user": { "$ref": "#/components/schemas/User" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Неверный email или пароль" }
+        }
+      }
+    },
+    "/api/logout": {
+      "post": {
+        "summary": "Выход пользователя",
+        "responses": {
+          "204": { "description": "Успешный выход" }
+        }
+      }
+    },
+    "/api/refresh": {
+      "get": {
+        "summary": "Обновление access токена",
+        "responses": {
+          "200": {
+            "description": "Новый токен выдан",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": { "type": "string", "example": "eyJhbGciOi..." }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/me": {
+      "get": {
+        "summary": "Получение текущего пользователя",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Данные пользователя",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/User" } } }
+          }
+        }
+      }
+    },
+    "/api/user/profile": {
+      "put": {
+        "summary": "Обновление данных пользователя",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserUpdate" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Данные успешно обновлены",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/User" } } }
+          }
+        }
+      }
+    },
+    "/api/transactions": {
+      "get": {
+        "summary": "Получить список транзакций",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Список транзакций",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Transaction" } }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Создать новую транзакцию",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateTransaction" } } }
+        },
+        "responses": {
+          "201": {
+            "description": "Транзакция создана",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Transaction" } } }
+          }
+        }
+      }
+    },
+    "/api/transactions/{id}": {
+      "delete": {
+        "summary": "Удалить транзакцию",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "schema": { "type": "integer" }, "required": true, "description": "ID транзакции" }
+        ],
+        "responses": { "204": { "description": "Транзакция успешно удалена" } }
+      }
+    },
+    "/api/transactions/stats": {
+      "get": {
+        "summary": "Получить статистику транзакций (доходы, расходы, баланс)",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Статистика успешно получена",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/DashboardStats" } } }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "email": { "type": "string", "example": "user@example.com" },
+          "name": { "type": "string", "example": "Liuba" }
+        }
+      },
+      "UserUpdate": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "example": "Liuba Skorikova" },
+          "email": { "type": "string", "example": "user@example.com" }
+        }
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 101 },
+          "amount": { "type": "number", "example": 125.5 },
+          "category": { "type": "string", "example": "Food" },
+          "date": { "type": "string", "format": "date-time", "example": "2025-10-24T12:30:00Z" },
+          "type": { "type": "string", "enum": ["income", "expense"], "example": "expense" },
+          "description": { "type": "string", "example": "Lunch at restaurant" }
+        }
+      },
+      "CreateTransaction": {
+        "type": "object",
+        "required": ["amount", "category", "type"],
+        "properties": {
+          "amount": { "type": "number", "example": 42.0 },
+          "category": { "type": "string", "example": "Transport" },
+          "type": { "type": "string", "enum": ["income", "expense"], "example": "expense" },
+          "description": { "type": "string", "example": "Metro ticket" }
+        }
+      },
+      "DashboardStats": {
+        "type": "object",
+        "properties": {
+          "totalIncome": { "type": "number", "example": 2500.0 },
+          "totalExpenses": { "type": "number", "example": 1750.0 },
+          "balance": { "type": "number", "example": 750.0 }
+        }
+      }
+    }
+  }
+}

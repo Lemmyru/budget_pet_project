@@ -1,18 +1,35 @@
 {
   "compilerOptions": {
     "outDir": "./build/",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "module": "ESNext",
-    "target": "es5",
+    "target": "ES2020",
     "jsx": "react-jsx",
     "allowJs": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "strict": false,
+    "types": ["node"]
   },
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS"
     }
-  }
+  },
+  "include": [
+    "src/**/*",
+    "src/types/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "build"
+  ],
+
 }
+
+

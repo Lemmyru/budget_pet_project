@@ -13,12 +13,16 @@
 @use "./base/_typography";
 
 /* layout */
-@use "./layout/_footer";
 @use "./layout/_header";
 @use "./layout/_main-page";
 @use "./layout/_login-page";
 @use "./layout/_register-page";
+@use "./layout/_dashboard";
+@use "./layout/_not-found";
+@use "./layout/_profile";
+
 
 /* components */
 @use "./components/_navbar";
 @use "./components/_advantage-card";
+@use "./components/_price-card";

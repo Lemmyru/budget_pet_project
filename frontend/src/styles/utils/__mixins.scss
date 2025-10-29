@@ -16,3 +16,28 @@
 
   @include hover-darken($bg-color);
 }
+
+@mixin hover-darken($color, $percentage: 10%) {
+  &:hover {
+    background-color: color.adjust($color, $lightness: -$percentage);
+  }
+}
+
+@mixin button-style($bg-color: $color-dark-purple) {
+  border-radius: $border-radius;
+  border: $border;
+  background-color: $bg-color;
+  transition: background-color 0.3s ease;
+  color: $color-light;
+  font-family: $font-family-base;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.8rem 1.5rem;
+
+  @include hover-darken($bg-color);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($bg-color, 0.3);
+  }
+}

@@ -1,58 +1,39 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from "axios";
+import * as axios from "axios";
 
-interface CustomRequestConfig extends InternalAxiosRequestConfig {
-    _isRetry?: boolean;
-}
-
-interface TokenResponse {
-    accessToken: string;
-}
-
-export const instance: AxiosInstance = axios.create({
+export const instance = axios.default.create({
     withCredentials: true,
     baseURL: "https://jsonplaceholder.typicode.com/",
 });
 
 instance.interceptors.request.use(
-    (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-        const customConfig = config as CustomRequestConfig;
+    (config) => {
         const token = localStorage.getItem("token");
-
-        if (token && customConfig.headers) {
-            customConfig.headers.Authorization = `Bearer ${token}`;
+        if (token && config.headers) {
+            config.headers.Authorization = `Bearer ${token}`;
         }
-
-        return customConfig;
-    },
-    (error: AxiosError) => {
-        return Promise.reject(error);
+        return config;
     }
 );
 
 instance.interceptors.response.use(
-    (response: AxiosResponse): AxiosResponse => {
+    (response) => {
         return response;
     },
-    async (error: AxiosError) => {
-        const originalRequest = error.config as CustomRequestConfig;
+    async (error) => {
+        const originalRequest = error.config;
 
         if (
             error.response?.status === 401 &&
             originalRequest &&
-            !originalRequest._isRetry
+            !(originalRequest as any)._isRetry
         ) {
             try {
-                originalRequest._isRetry = true;
-
-                console.log("Attempting to refresh token...");
-                const resp = await instance.get<TokenResponse>("/api/refresh");
+                (originalRequest as any)._isRetry = true;
+                const resp = await instance.get("/api/refresh");
                 localStorage.setItem("token", resp.data.accessToken);
-                console.log("Token refreshed successfully");
-
                 return instance.request(originalRequest);
-            } catch (refreshError) {
-                console.log("AUTH ERROR: Failed to refresh token");
-                localStorage.removeItem("token");
+            } catch {
+                console.log("AUTH ERROR");
             }
         }
 

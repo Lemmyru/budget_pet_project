@@ -1,22 +1,15 @@
-import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import path from "path";
-import HtmlWebpackPlugin from "html-webpack-plugin";
-import webpack from "webpack";
-import {type Configuration as DevServerConfiguration} from "webpack-dev-server";
-import {buildLoaders} from "./buildLoaders";
-import {buildPlugins} from "./buildPlugins";
-import {buildResolvers} from "./buildResolvers";
-import {BuildOptions} from "./types/types";
-import {buildDevServer} from "./buildDevServer";
-
+import * as webpack from "webpack";
+import { buildLoaders } from "./buildLoaders";
+import { buildPlugins } from "./buildPlugins";
+import { buildResolvers } from "./buildResolvers";
+import { BuildOptions } from "./types/types";
+import { buildDevServer } from "./buildDevServer";
 
 export function buildWebpack(options: BuildOptions): webpack.Configuration {
-    const {mode, paths} = options;
+    const { mode, paths } = options;
     const isDev = mode === "development";
 
-
     return {
-
         mode: mode ?? 'development',
         entry: paths.entry,
         devtool: isDev ? 'inline-source-map' : false,
@@ -34,6 +27,5 @@ export function buildWebpack(options: BuildOptions): webpack.Configuration {
             runtimeChunk: 'single',
         },
         plugins: buildPlugins(options),
-    }
-
+    };
 }

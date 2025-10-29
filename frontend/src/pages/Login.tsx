@@ -1,10 +1,42 @@
-import React from 'react';
-import NavbarMain from "../components/NavbarMain";
-import {Link} from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthService } from '../services/api.auth';
 
 const Login = () => {
-    return (
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
+
+        try {
+            // TODO: Заменить вызов когда бэкенд будет готов
+            console.log('Login attempt with:', formData);
+
+            navigate('/dashboard');
+        } catch (err: any) {
+            setError(err.response?.data?.message || 'Login failed');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
         <div className="login">
             <div className="login__container">
                 <Link to="/" className="login__back-button">
@@ -15,17 +47,26 @@ const Login = () => {
                     <p className="login__subtitle">Welcome! Please login to your account</p>
                 </div>
 
-                <form className="login__form">
+                {error && (
+                    <div className="login__error">
+                        {error}
+                    </div>
+                )}
+
+                <form className="login__form" onSubmit={handleSubmit}>
                     <div className="login__input-group">
-                        <label className="login__label" htmlFor="name">
-                            Name:
+                        <label className="login__label" htmlFor="email">
+                            Email:
                         </label>
                         <input
                             className="login__input"
-                            type="text"
-                            id="name"
-                            name="name"
-                            placeholder="Enter your name"
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            placeholder="Enter your email"
+                            required
                         />
                     </div>
 
@@ -38,12 +79,19 @@ const Login = () => {
                             type="password"
                             id="password"
                             name="password"
+                            value={formData.password}
+                            onChange={handleChange}
                             placeholder="Enter your password"
+                            required
                         />
                     </div>
 
-                    <button type="submit" className="login__submit-button">
-                        Register now
+                    <button
+                        type="submit"
+                        className="login__submit-button"
+                        disabled={loading}
+                    >
+                        {loading ? 'LOGGING IN...' : 'LOGIN'}
                     </button>
                 </form>
 
@@ -58,6 +106,6 @@ const Login = () => {
             </div>
         </div>
     );
-}
+};
 
 export default Login;

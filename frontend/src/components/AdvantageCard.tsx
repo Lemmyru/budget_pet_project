@@ -1,17 +1,32 @@
-import React, {ReactNode, FC} from 'react';
+import React from 'react';
+import rocketIcon from '../assets/images/rocket.png';
+import calendarIcon from '../assets/images/calendar.png';
+import timeIcon from '../assets/images/time.png';
 
 interface AdvantageCardProps {
     title: string;
     description: string;
-    image?: ReactNode;
+    icon: string;
 }
 
-const AdvantageCard: FC<AdvantageCardProps> = ({title, description, image}) => {
+const iconMap: { [key: string]: string } = {
+    rocket: rocketIcon,
+    time: timeIcon,
+    calendar: calendarIcon
+};
+
+const AdvantageCard: React.FC<AdvantageCardProps> = ({ title, description, icon }) => {
     return (
         <div className="advantage-card">
-            <h5 className="advantage-card__title">{title}</h5>
+            <div className="advantage-card__icon">
+                <img
+                    src={iconMap[icon]}
+                    alt={title}
+                    className="advantage-card__icon-img"
+                />
+            </div>
+            <h3 className="advantage-card__title">{title}</h3>
             <p className="advantage-card__description">{description}</p>
-            {image && <div className="advantage-card__image">{image}</div>}
         </div>
     );
 };

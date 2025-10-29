@@ -7,7 +7,6 @@ $color-dark-purple: #59347d;
 $color-light-blue: #d8e3fe;
 $color-purple-light: #dfcfe0;
 
-
 $color-dark-purple-hover: color.scale($color-dark-purple, $lightness: +40%);
 $color-light-blue-hover: color.scale($color-light-blue, $lightness: +40%);
 $color-purple-light-hover: color.scale($color-purple-light, $lightness: +40%);
@@ -19,6 +18,5 @@ $border: 1px solid $color-black;
 
 $font-family-base: 'Quicksand', sans-serif;
 $font-family-accent: 'Roboto', sans-serif;
-
 
 
