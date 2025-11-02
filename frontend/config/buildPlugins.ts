@@ -1,6 +1,6 @@
-import * as MiniCssExtractPlugin from "mini-css-extract-plugin";
-import * as HtmlWebpackPlugin from "html-webpack-plugin";
-import * as webpack from "webpack";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import webpack from "webpack";
 import { Configuration } from "webpack";
 import { BuildOptions } from "./types/types";
 

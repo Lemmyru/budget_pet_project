@@ -18,18 +18,18 @@
   },
   "ts-node": {
     "compilerOptions": {
-      "module": "CommonJS"
+      "module": "CommonJS",
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true
     }
   },
   "include": [
     "src/**/*",
-    "src/types/**/*"
+    "config/**/*",
+    "types/**/*"
   ],
   "exclude": [
     "node_modules",
     "build"
-  ],
-
+  ]
 }
-
-
