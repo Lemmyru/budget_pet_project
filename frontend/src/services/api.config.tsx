@@ -2,7 +2,7 @@ import * as axios from "axios";
 
 export const instance = axios.default.create({
     withCredentials: true,
-    baseURL: "https://jsonplaceholder.typicode.com/",
+    baseURL: process.env.REACT_APP_API_URL || "http://localhost:8000",
 });
 
 instance.interceptors.request.use(
@@ -16,9 +16,7 @@ instance.interceptors.request.use(
 );
 
 instance.interceptors.response.use(
-    (response) => {
-        return response;
-    },
+    (response) => response,
     async (error) => {
         const originalRequest = error.config;
 
@@ -29,11 +27,12 @@ instance.interceptors.response.use(
         ) {
             try {
                 (originalRequest as any)._isRetry = true;
-                const resp = await instance.get("/api/refresh");
+                const resp = await instance.get("/auth/refresh");
                 localStorage.setItem("token", resp.data.accessToken);
                 return instance.request(originalRequest);
             } catch {
                 console.log("AUTH ERROR");
+                window.location.href = '/login';
             }
         }
 

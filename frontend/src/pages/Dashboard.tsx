@@ -3,20 +3,39 @@ import DashboardSidebar from '../components/DashboardSidebar';
 import DashboardStats from '../components/DashboardStats';
 import AddTransactionForm from '../components/AddTransactionForm';
 import RecentTransactions from '../components/RecentTransactions';
-import { transactionService, type Transaction, type CreateTransactionDto, type DashboardStats as StatsType } from '../services/transaction.api';
+import { transactionService, type Transaction, type CreateTransactionDto } from '../services/transaction.api';
 import { userService, type User } from '../services/user.api';
+import { AuthService } from '../services/api.auth';
+import {Link} from "react-router-dom";
+import { useNavigate, Navigate } from 'react-router-dom';
+
+
+const calculateStats = (transactions: Transaction[]) => {
+    const totalIncome = transactions
+        .filter(t => t.type === 'income')
+        .reduce((sum, t) => sum + t.amount, 0);
+
+    const totalExpenses = transactions
+        .filter(t => t.type === 'expense')
+        .reduce((sum, t) => sum + t.amount, 0);
+
+    const balance = totalIncome - totalExpenses;
+
+    return {
+        totalIncome,
+        totalExpenses,
+        balance
+    };
+};
 
 const Dashboard = () => {
     const [user, setUser] = useState<User | null>(null);
-    const [stats, setStats] = useState<StatsType>({
-        totalIncome: 0,
-        totalExpenses: 0,
-        balance: 0
-    });
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [addingTransaction, setAddingTransaction] = useState(false);
+
+    const stats = calculateStats(transactions);
 
     useEffect(() => {
         loadDashboardData();
@@ -25,15 +44,11 @@ const Dashboard = () => {
     const loadDashboardData = async () => {
         try {
             setLoading(true);
-            const [userData, transactionsData, statsData] = await Promise.all([
-                userService.getCurrentUser(),
-                transactionService.getTransactions(),
-                transactionService.getStats()
-            ]);
+            const userData = await userService.getCurrentUser();
+            const transactionsData = await transactionService.getTransactions(userData.id);
 
             setUser(userData);
             setTransactions(transactionsData);
-            setStats(statsData);
         } catch (err: any) {
             setError('Failed to load dashboard data');
             console.error('Dashboard loading error:', err);
@@ -45,15 +60,11 @@ const Dashboard = () => {
     const handleAddTransaction = async (transactionData: CreateTransactionDto) => {
         try {
             setAddingTransaction(true);
-            await transactionService.createTransaction(transactionData);
+            const userData = await userService.getCurrentUser();
+            const newTransaction = await transactionService.createTransaction(userData.id, transactionData);
 
-            const [updatedTransactions, updatedStats] = await Promise.all([
-                transactionService.getTransactions(),
-                transactionService.getStats()
-            ]);
 
-            setTransactions(updatedTransactions);
-            setStats(updatedStats);
+            setTransactions(prev => [newTransaction, ...prev]);
         } catch (err: any) {
             setError('Failed to add transaction');
             console.error('Transaction creation error:', err);
@@ -64,14 +75,11 @@ const Dashboard = () => {
 
     const handleDeleteTransaction = async (id: number) => {
         try {
-            await transactionService.deleteTransaction(id);
-            const [updatedTransactions, updatedStats] = await Promise.all([
-                transactionService.getTransactions(),
-                transactionService.getStats()
-            ]);
+            const userData = await userService.getCurrentUser();
+            await transactionService.deleteTransaction(userData.id, id);
 
-            setTransactions(updatedTransactions);
-            setStats(updatedStats);
+
+            setTransactions(prev => prev.filter(t => t.id !== id));
         } catch (err: any) {
             setError('Failed to delete transaction');
         }
@@ -90,9 +98,12 @@ const Dashboard = () => {
             <div className="dashboard">
                 <div className="dashboard__error">
                     {error}
-                    <button onClick={loadDashboardData} className="dashboard__retry-btn">
-                        Try Again
-                    </button>
+                    <Navigate
+                        to="/error"
+                        state={{ message: error }}
+                        replace
+                    />
+
                 </div>
             </div>
         );
@@ -105,12 +116,28 @@ const Dashboard = () => {
             </div>
         );
     }
+    const handleLogout = () => {
+
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        localStorage.removeItem('auth');
+
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('token');
+
+        document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+
+
+        window.location.href = '/';
+
+    };
 
     return (
         <div className="dashboard">
             <DashboardSidebar
                 userName={user.name}
                 balance={stats.balance}
+                handleLogout={handleLogout}
             />
 
             <main className="dashboard__main">

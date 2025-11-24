@@ -5,7 +5,6 @@ import AdvantageCard from "../components/AdvantageCard";
 import PriceCard from "../components/PriceCard";
 import { Link } from "react-router-dom";
 
-
 interface PricePlan {
     title: string;
     price: string;
@@ -74,6 +73,7 @@ const advantages: Advantage[] = [
         icon: "time"
     }
 ];
+
 const stats: Stat[] = [
     { number: "50K+", label: "Happy Users" },
     { number: "$2.1M+", label: "Saved Monthly" },
@@ -103,7 +103,6 @@ const MainPage: React.FC = () => {
                 </div>
             </section>
 
-
             <section className="main-page__stats">
                 <div className="main-page__stats-container">
                     {stats.map((stat, index) => (
@@ -114,7 +113,6 @@ const MainPage: React.FC = () => {
                     ))}
                 </div>
             </section>
-
 
             <section id="why-us" className="main-page__features">
                 <div className="main-page__features-container">
@@ -138,7 +136,6 @@ const MainPage: React.FC = () => {
                     </div>
                 </div>
             </section>
-
 
             <section id="pricing" className="main-page__pricing" aria-labelledby="pricing-title">
                 <div className="main-page__pricing-container">
@@ -167,7 +164,6 @@ const MainPage: React.FC = () => {
                 </div>
             </section>
 
-
             <section className="main-page__cta">
                 <div className="main-page__cta-container">
                     <h2 className="main-page__cta-title">
@@ -186,6 +182,22 @@ const MainPage: React.FC = () => {
                 </div>
             </section>
 
+            <section id="contacts" className="main-page__contacts">
+                <div className="main-page__contacts-container">
+                    <h2 className="main-page__contacts-title">Contact Us</h2>
+                    <p className="main-page__contacts-subtitle">
+                        Have questions? We'd love to hear from you.
+                    </p>
+                    <div className="main-page__contacts-content">
+                        <div className="main-page__contacts-info">
+                            <h3>Get in touch</h3>
+                            <p>Email: support@simplebudget.com</p>
+                            <p>Phone: +1 (555) 123-4567</p>
+                            <p>Address: 123 Financial Street, Money City</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <footer className="main-page__footer">
                 <div className="main-page__footer-container">
@@ -213,7 +225,7 @@ const MainPage: React.FC = () => {
                 </div>
             </footer>
         </main>
-    );
-};
+    )
+}
 
-export default MainPage;
+export default MainPage

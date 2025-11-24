@@ -9,6 +9,7 @@ import Profile from '../pages/Profile';
 import Register from '../pages/Register';
 import NavbarMain from './NavbarMain';
 import ForgotPassword from "../pages/ForgotPassword";
+import ErrorPage from "../pages/ErrorPage";
 
 const AppRouter = () => {
     return (
@@ -21,6 +22,7 @@ const AppRouter = () => {
                 <Route path="/register" element={<Register />} />
                 <Route path="*" element={<NotFound />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/error" element={<ErrorPage />} />
             </Routes>
         </BrowserRouter>
     );

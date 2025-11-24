@@ -25,12 +25,21 @@ const Login = () => {
         setError(null);
 
         try {
-            // TODO: Заменить вызов когда бэкенд будет готов
-            console.log('Login attempt with:', formData);
+            const response = await AuthService.login(formData.email, formData.password);
+
+            const userData = {
+                id: response.id,
+                name: response.name,
+                email: response.email
+            };
+
+            localStorage.setItem("token", response.access_token);
+            localStorage.setItem("user", JSON.stringify(userData));
 
             navigate('/dashboard');
         } catch (err: any) {
-            setError(err.response?.data?.message || 'Login failed');
+
+            setError(err.response?.data?.detail || 'Login failed');
         } finally {
             setLoading(false);
         }

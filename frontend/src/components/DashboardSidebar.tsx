@@ -4,9 +4,10 @@ import { Link } from 'react-router-dom';
 interface DashboardSidebarProps {
     userName: string;
     balance: number;
+    handleLogout: () => void;
 }
 
-const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userName, balance }) => {
+const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userName, balance, handleLogout }) => {
     return (
         <aside className="dashboard__sidebar">
             <div className="dashboard__user-info">
@@ -22,6 +23,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userName, balance }
             <nav className="dashboard__nav">
                 <Link to="/" className="dashboard__nav-link">Main Page</Link>
                 <Link to="/profile" className="dashboard__nav-link">My Profile</Link>
+                <Link to="/" className="dashboard__nav-link" onClick={handleLogout}>Exit</Link>
             </nav>
         </aside>
     );

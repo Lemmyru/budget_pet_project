@@ -1,37 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import {Link} from "react-router-dom";
 import User from "../assets/images/user.png";
+import { userService } from '../services/user.api';
 
 const Profile = () => {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    // Заглушки данных - в будущем заменим на бэкенд
-    const mockUserData = {
-        name: 'Иван Иванов',
-        email: 'ivan@example.com',
-        plan: 'free',
-        registrationDate: '15 января 2024',
-        projectsUsed: 3,
-        projectsLimit: 5,
-
-    };
-
-
     const loadUserData = async () => {
         try {
             setLoading(true);
             setError('');
 
+            const userData = await userService.getCurrentUser();
 
-            // const response = await fetch('/api/user/profile');
-            // const data = await response.json();
-            // setUserData(data);
 
-            // Заглушка:
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            setUserData(mockUserData);
+            setUserData({
+                name: userData.name,
+                email: userData.email,
+                plan: 'free',
+                registrationDate: new Date().toLocaleDateString('ru-RU', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                })
+            });
+
         } catch (err) {
             setError('Ошибка загрузки данных профиля');
             console.error('Profile loading error:', err);
@@ -43,7 +38,6 @@ const Profile = () => {
     useEffect(() => {
         loadUserData();
     }, []);
-
 
     if (loading) {
         return (
@@ -69,7 +63,6 @@ const Profile = () => {
     if (!userData) {
         return (
             <div className="profile">
-
                 <div className="profile__error">
                     Can't find user data!
                     <button onClick={loadUserData} className="profile__retry-btn">
@@ -114,14 +107,13 @@ const Profile = () => {
                             <label className="profile-details__label">Registration date</label>
                             <p className="profile-details__value">{userData.registrationDate}</p>
                         </div>
-                        </div>
                     </div>
 
                     <div className="profile-card__actions">
                     </div>
                 </div>
             </div>
-
+        </div>
     );
 };
 

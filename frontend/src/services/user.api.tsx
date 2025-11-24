@@ -1,4 +1,4 @@
-import { instance } from './api.config';
+import { instance } from "./api.config";
 
 export interface User {
     id: number;
@@ -8,32 +8,18 @@ export interface User {
 
 export const userService = {
     async getCurrentUser(): Promise<User> {
+        const userStr = localStorage.getItem("user");
 
-        await new Promise(resolve => setTimeout(resolve, 500));
+        if (!userStr || userStr === "undefined" || userStr === "null") {
+            throw new Error("User not found in localStorage. Please login first.");
+        }
 
-        return {
-            id: 1,
-            email: 'user@example.com',
-            name: 'Demo User'
-        };
-
-       /* const response = await instance.get<User>('/api/user/me');
-        return response.data;
-*/
-
-    },
-
-    async updateUser(userData: Partial<User>): Promise<User> {
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        return {
-            id: 1,
-            email: userData.email || 'user@example.com',
-            name: userData.name || 'Demo User'
-        };
-
-
-      /*  const response = await instance.put<User>('/api/user/profile', userData);
-        return response.data;*/
+        try {
+            return JSON.parse(userStr);
+        } catch (error) {
+            localStorage.removeItem("user");
+            throw new Error("Invalid user data in localStorage");
+        }
     }
 };
+

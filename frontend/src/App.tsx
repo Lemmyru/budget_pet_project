@@ -11,10 +11,10 @@ import Card from "./components/Card";
 const App: React.FC = () => {
     return (
         <div>
-            <AppRouter />;
+            <AppRouter />
 
         </div>
-    );
+    )
 };
 
 export default App;

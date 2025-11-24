@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthService } from '../services/api.auth';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -23,7 +24,6 @@ const Register = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-
         if (formData.password !== formData.confirmPassword) {
             setError('Passwords do not match');
             return;
@@ -33,17 +33,54 @@ const Register = () => {
         setError(null);
 
         try {
-            // TODO: Заменить на реальную регистрацию
-            console.log('Registration attempt with:', {
-                name: formData.name,
-                email: formData.email,
-                password: formData.password
-            });
+            const response = await AuthService.register(
+                formData.name,
+                formData.email,
+                formData.password
+            );
+            const userData = {
+                id: response.id,
+                name: response.name,
+                email: response.email
+            };
 
-            navigate('/login');
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Registration failed');
-        } finally {
+            console.log('User data to save:', userData);
+
+            localStorage.setItem("token", response.access_token);
+            localStorage.setItem("user", JSON.stringify(userData));
+
+
+            navigate('/dashboard');
+        }
+        catch (err: any) {
+            console.log('Full error:', err);
+
+            if (err.response?.status === 422) {
+                setError('Password must be at least 6 characters long');
+            }
+            else if (err.response?.data?.detail) {
+                if (typeof err.response.data.detail === 'string') {
+                    setError(err.response.data.detail);
+                }
+                else if (Array.isArray(err.response.data.detail)) {
+                    const firstError = err.response.data.detail[0];
+                    if (firstError?.msg) {
+                        setError(firstError.msg);
+                    } else {
+                        setError('Validation error');
+                    }
+                }
+                else if (typeof err.response.data.detail === 'object') {
+                    setError('Password must be at least 6 characters long');
+                } else {
+                    setError('Registration failed');
+                }
+            } else if (err.message) {
+                setError(err.message);
+            } else {
+                setError('Registration failed');
+            }}
+        finally {
             setLoading(false);
         }
     };

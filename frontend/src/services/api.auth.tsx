@@ -1,4 +1,4 @@
-import { instance } from "./api.config";
+import {instance} from "./api.config";
 
 interface LoginData {
     email: string;
@@ -6,28 +6,34 @@ interface LoginData {
 }
 
 interface AuthResponse {
-    accessToken: string;
-    refreshToken?: string;
-    user: {
-        id: number;
-        email: string;
-        name: string;
-    };
+    access_token: string;
+    id: number;
+    email: string;
+    name: string;
+
 }
 
 export const AuthService = {
     async login(email: string, password: string): Promise<AuthResponse> {
         const loginData: LoginData = { email, password };
-        const response = await instance.post<AuthResponse>("/api/login", loginData);
+        const response = await instance.post<AuthResponse>("/auth/login", loginData);
         return response.data;
     },
 
-    async refreshToken(): Promise<{ accessToken: string }> {
-        const response = await instance.get<{ accessToken: string }>("/api/refresh");
+    async register(name: string, email: string, password: string): Promise<AuthResponse> {
+        const registerData = { name, email, password };
+        const response = await instance.post<AuthResponse>("/auth/register", registerData);
+        return response.data;
+    },
+
+    async refreshToken(): Promise<{ access_token: string }> {
+        const response = await instance.get<{ access_token: string }>("/auth/refresh");
         return response.data;
     },
 
     async logout(): Promise<void> {
-        await instance.post("/api/logout");
+        await instance.post("/auth/logout");
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
     }
 };
